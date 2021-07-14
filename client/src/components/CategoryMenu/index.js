@@ -1,10 +1,34 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useQuery } from '@apollo/client';
 import { QUERY_CATEGORIES } from '../../utils/queries';
+import {useStoreContext} from '../../utils/GlobalState';
+import {UPDATE_CURRENT_CATEGORY, UPDATE_CATEGORIES} from '../../utils/actions';
 
-function CategoryMenu({ setCategory }) {
-  const { data: categoryData } = useQuery(QUERY_CATEGORIES);
-  const categories = categoryData?.categories || [];
+function CategoryMenu() {
+ 
+  //call and receive the current state from the global context
+  const [state, dispatch] = useStoreContext();
+  const {categories} = state;
+  const {data: categoryData} = useQuery(QUERY_CATEGORIES);
+
+  //runs the first argument callback function when the categoryData and dispatch load from useQuery
+  useEffect(() => {
+    //if there is category data that has been returned by useQuery then run dispatch
+    if(categoryData){
+      //execute the dispatch function to use the update categories action and provide the new category data to the state
+      dispatch({
+        type: UPDATE_CATEGORIES,
+        categories: categoryData.categories
+      })
+    }
+  }, [categoryData, dispatch]);
+
+  const clickHandler = id => {
+    dispatch({
+      type: UPDATE_CURRENT_CATEGORY,
+      currentCategory: id
+    })
+  }
 
   return (
     <div>
@@ -13,7 +37,7 @@ function CategoryMenu({ setCategory }) {
         <button
           key={item._id}
           onClick={() => {
-            setCategory(item._id);
+            clickHandler(item._id);
           }}
         >
           {item.name}
