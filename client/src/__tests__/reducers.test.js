@@ -118,8 +118,7 @@ test('CLEAR_CART', ()=> {
 
 test('TOGGLE_CART', ()=>{
     let newState = reducer(initialState, {
-        type: TOGGLE_CART,
-        cartOpen: !initialState.cartOpen
+        type: TOGGLE_CART
     })
 
     expect(newState.cartOpen).toBe(true);

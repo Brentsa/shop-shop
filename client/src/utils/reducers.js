@@ -81,7 +81,7 @@ export const reducer = (state, action) => {
         case TOGGLE_CART:
             return {
                 ...state,
-                cartOpen: action.cartOpen
+                cartOpen: !state.cartOpen
             }
 
         //if we are not updating anything then we do not update state at all
