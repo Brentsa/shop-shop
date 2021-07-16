@@ -3,12 +3,8 @@ import { useMutation } from '@apollo/client';
 import Jumbotron from '../components/Jumbotron/index.js';
 import { ADD_ORDER } from '../utils/mutations';
 import { idbPromise } from '../utils/helpers';
-import { useStoreContext } from '../utils/GlobalState.js';
-import { CLEAR_CART } from '../utils/actions.js';
 
 function Success(){
-
-    const [, dispatch] = useStoreContext();
 
     const [addOrder] = useMutation(ADD_ORDER);
 
@@ -26,10 +22,6 @@ function Success(){
                 productData.forEach((item) => {
                   idbPromise('cart', 'delete', item);
                 });
-
-                dispatch({
-                    type: CLEAR_CART
-                });
             }
 
             setTimeout(()=>{
@@ -39,7 +31,7 @@ function Success(){
 
         saveOrder()
 
-    }, [addOrder, dispatch]);
+    }, [addOrder]);
 
     return (
         <div>
