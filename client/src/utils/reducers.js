@@ -53,14 +53,14 @@ export const reducer = (state, action) => {
 
             return {
                 ...state,
-                cartOpen: newCart > 0,
+                cartOpen: newCart.length > 0,
                 cart: newCart
             };
 
         case UPDATE_CART_QUANTITY: 
             let updatedCart = state.cart.map(item => {
                 if(item._id === action._id){
-                    item.productQuantity = action.quantity;
+                    item.purchaseQuantity = action.purchaseQuantity;
                 }
                 return item;
             });

@@ -19,7 +19,6 @@ const StoreProvider = ({value = [], ...props}) => {
         cart: []
     });
 
-    console.log(state);
     return <Provider value={[state, dispatch]}{...props}/>;
 }
 
