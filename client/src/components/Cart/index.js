@@ -1,13 +1,32 @@
-import React from "react";
+import React, {useEffect} from "react";
 import CartItem from '../CartItem';
 import Auth from '../../utils/auth';
 import './style.css';
 import { useStoreContext } from '../../utils/GlobalState';
-import { TOGGLE_CART } from '../../utils/actions'
+import { TOGGLE_CART, ADD_MULTIPLE_TO_CART } from '../../utils/actions';
+import { idbPromise } from '../../utils/helpers';
 
 function Cart(){
 
     const [state, dispatch] = useStoreContext();
+
+    //gets called when cart is rendered
+    useEffect(()=>{
+        //return whatever is in the idb cart and store it to the global store
+        async function getCart(){
+            const cart = await idbPromise('cart', 'get');
+            dispatch({
+                type: ADD_MULTIPLE_TO_CART,
+                products: [...cart]
+            })
+        }
+
+        //if there is nothing in the cart, try getting the cart from idb
+        if(!state.cart.length){
+            getCart();
+        }
+
+    }, [state.cart.length, dispatch]);
 
     function toggleCart(){
         dispatch({type: TOGGLE_CART});

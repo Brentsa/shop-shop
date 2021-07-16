@@ -18,23 +18,25 @@ export function idbPromise(storeName, method, object){
 
     //if the version has changed or is being run for the first time, then create our 3 stores
     //only runs if the version changes
-    request.onupgradeneeded(e => {
+    request.onupgradeneeded = function(e) {
       //set the database
       const db = request.result;
 
       //create an object store for each type of data we are storing and set the primary key to _id
-      db.createObjectStore('products', {keyPath: _id});
-      db.createObjectStore('categories', {keyPath: _id});
-      db.createObjectStore('cart', {keyPath: _id});
-    });
+      db.createObjectStore('products', {keyPath: '_id'});
+      db.createObjectStore('categories', {keyPath: '_id'});
+      db.createObjectStore('cart', {keyPath: '_id'});
+    };
 
     //handle any errors with the db connection (unlikely)
-    request.onerror(err => console.log("There was an error: " + err));
+    request.onerror = function(err){
+      console.log("There was an error: " + err);
+    } 
 
     //called if the database opens successfully
-    request.onsuccess(e => {
+    request.onsuccess = function(e) {
       //set the database to the db reference
-      db = request.result
+      db = request.result;
 
       //open a transaction based on the transaction type entered into the function
       tx = db.transaction(storeName, 'readwrite');
@@ -43,7 +45,9 @@ export function idbPromise(storeName, method, object){
       store = tx.objectStore(storeName);
 
       //if there are any errors with the db call 
-      db.onerror(err => console.log("Error: " + err));
+      db.onerror = function(err){
+        console.log("Error: " + err);
+      } 
       
       switch(method){
         //return all data from the indexed store
@@ -68,12 +72,12 @@ export function idbPromise(storeName, method, object){
         default:
           console.log('Not a valid method');
           break;
-      }
+      };
 
       //clase the db once the transaction has been completed
-      tx.oncomplete(() => {
+      tx.oncomplete = function() {
         db.close();
-      });
-    });
+      };
+    };
   })
 }
